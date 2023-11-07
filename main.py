@@ -6,6 +6,7 @@ from configs import app_settings
 from providers import init_logging
 from providers import DB
 
+from app.endpoints.users import users_router
 
 # スタートアップ前のイベント
 @asynccontextmanager
@@ -34,6 +35,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ROUTER追加
+app.include_router(users_router)
 
 if __name__ == "__main__":
     from uvicorn import run

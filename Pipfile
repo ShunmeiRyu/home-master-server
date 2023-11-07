@@ -10,8 +10,9 @@ gunicorn = "*"
 pydantic-settings = "*"
 loguru = "*"
 asyncpg = "*"
-python-jose = {extras = ["cryptography"], version = "*"}
-passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = "*"
+passlib = "*"
+bcrypt = "*"
 
 [dev-packages]
 
