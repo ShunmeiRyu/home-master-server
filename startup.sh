@@ -1,0 +1,1 @@
+gunicorn --config ./configs/gunicorn_conf.py main:app
