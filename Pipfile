@@ -13,7 +13,6 @@ asyncpg = "*"
 python-jose = "*"
 passlib = "*"
 bcrypt = "*"
-sshtunnel = "*"
 
 [dev-packages]
 
