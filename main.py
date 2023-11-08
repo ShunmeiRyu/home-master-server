@@ -8,6 +8,7 @@ from providers import DB
 
 from app.endpoints.users import users_router
 
+
 # スタートアップ前のイベント
 @asynccontextmanager
 async def lifespan(app: FastAPI):
