@@ -11,7 +11,9 @@ async def query_user_with_email(
     sql = f"""
     SELECT
         id,
-        hashed_pwd
+        hashed_pwd,
+        email,
+        status
     FROM
         users
     WHERE
@@ -59,3 +61,27 @@ async def query_verify_info(db: DB, /, user_id: str, verify_code: str):
     return await db.fetch_one(sql)
 
 
+async def update_user_status(db: DB, /, user_id: str):
+    sql = f"""
+    UPDATE
+        USERS
+    SET
+        status = '{UserStatus.general.value}'
+    WHERE
+        id = '{user_id}'
+    """
+
+    await db.execute(sql)
+
+
+async def update_user_password(db: DB, /, user_id: str, new_pwd: str):
+    sql = f"""
+    UPDATE
+        USERS
+    SET
+        hashed_pwd = '{new_pwd}'
+    WHERE
+        id = '{user_id}'
+    """
+
+    await db.execute(sql)

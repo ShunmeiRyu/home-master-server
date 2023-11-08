@@ -6,6 +6,7 @@ from typing import Optional
 from loguru import logger
 from configs import psql_settings
 from configs import app_settings
+from fastapi.encoders import jsonable_encoder
 
 
 class DB:
@@ -32,7 +33,7 @@ class DB:
             if app_settings.DEBUG:
                 logger.info(query)
             result = await con.fetchrow(query)
-            return result
+            return jsonable_encoder(result)
 
     async def fetch_all(self, query: str) -> List[Record]:
         if self._connection_pool is None:
@@ -41,7 +42,7 @@ class DB:
             if app_settings.DEBUG:
                 logger.info(query)
             result = await con.fetch(query)
-            return result
+            return jsonable_encoder(result)
 
     async def fetch_value(self, query: str) -> Any:
         if self._connection_pool is None:

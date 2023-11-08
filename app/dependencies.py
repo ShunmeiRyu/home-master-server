@@ -12,7 +12,7 @@ async def get_psql() -> DB:
     return db
 
 
-async def get_user_id(authorization: Annotated[str | None, Cookie()] = None):
+async def get_user_id(authorization: Annotated[str, Cookie()] = None):
     try:
         [type_, token] = authorization.split(" ")
         payload = jwt.decode(
