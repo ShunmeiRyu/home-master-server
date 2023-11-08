@@ -8,7 +8,7 @@ END;
 $$ language 'plpgsql';
 
 
-CREATE TYPE STAFFS_STATUS AS ENUM (
+CREATE TYPE USERS_STATUS AS ENUM (
   '0', -- 新规
   '1', -- 常规
   '9'  -- 禁止
