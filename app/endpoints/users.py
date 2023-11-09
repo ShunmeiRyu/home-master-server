@@ -13,6 +13,7 @@ from fastapi import Response
 from utils import gen_access_token
 from utils import verify_password
 from app.schemas.enums import UserStatus
+from pydantic import EmailStr
 
 users_router = APIRouter()
 
@@ -54,7 +55,7 @@ async def register(new_user: UserSchemas.NewUser, db=Depends(get_psql)):
         )
 
 
-@users_router.post("/user/verify_code")
+@users_router.put("/user/status")
 async def verify_email(verify_data: UserSchemas.VerifyData, db=Depends(get_psql)):
     try:
         db_user = await UserCRUD.query_user_with_email(db, email=verify_data.email)
@@ -91,17 +92,17 @@ async def verify_email(verify_data: UserSchemas.VerifyData, db=Depends(get_psql)
         )
 
 
-@users_router.post("/user/resend_code")
-async def resend_code(user: UserSchemas.BasicUser, db=Depends(get_psql)):
+@users_router.get("/user/code")
+async def resend_code(email: EmailStr, db=Depends(get_psql)):
     try:
-        db_user = await UserCRUD.query_user_with_email(db, email=user.email)
+        db_user = await UserCRUD.query_user_with_email(db, email)
         if db_user is None:
             return JSONResponse(
                 status_code=400,
                 content={"message": "email is not exist"},
             )
         new_verify_code = gen_verify_code()
-        send_email(target_eamil=user.email, verify_code=new_verify_code)
+        send_email(target_eamil=email, verify_code=new_verify_code)
         await UserCRUD.insert_new_user(
             db, user_id=db_user["id"], verify_code=new_verify_code
         )
@@ -117,7 +118,7 @@ async def resend_code(user: UserSchemas.BasicUser, db=Depends(get_psql)):
         )
 
 
-@users_router.post("/user/login")
+@users_router.post("/user/token")
 async def login(user: UserSchemas.AuthUser, response: Response, db=Depends(get_psql)):
     try:
         db_user = await UserCRUD.query_user_with_email(db, email=user.email)
@@ -158,7 +159,7 @@ async def login(user: UserSchemas.AuthUser, response: Response, db=Depends(get_p
         )
 
 
-@users_router.post("/user/password")
+@users_router.put("/user/password")
 async def change_password(user: UserSchemas.AuthUser, db=Depends(get_psql)):
     try:
         db_user = await UserCRUD.query_user_with_email(db, email=user.email)
